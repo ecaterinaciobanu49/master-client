@@ -2,8 +2,6 @@ package org.example.services;
 
 import com.github.javafaker.Faker;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -52,4 +50,51 @@ public class DataGenerator {
     public static double generateRandomBalance() {
         return faker.number().randomDouble(2, 0, 10000);
     }
+    public static int generateRandomIntInRange() {
+        return faker.number().numberBetween(1, 31);
+    }
+    public static Date generateRandomNearNowDate() {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DAY_OF_YEAR, 7);
+        Date maxDate = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_YEAR, -14);
+        Date minDate = calendar.getTime();
+        return faker.date().between(minDate, maxDate);
+    }
+    public static Date addRandomYears(Date date) {
+        int yearsToAdd = faker.number().numberBetween(1, 11);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.YEAR, yearsToAdd);
+
+        return calendar.getTime();
+    }
+
+    public static String generateRandomCardNumber() {
+        return faker.finance().creditCard();
+    }
+
+    public static Date generateRandomExpireDate() {
+        Calendar calendar = Calendar.getInstance();
+
+        int yearsToAdd = faker.number().numberBetween(1, 6);
+
+        calendar.add(Calendar.YEAR, yearsToAdd);
+
+        int month = faker.number().numberBetween(0, 12); // Months are 0-indexed in Calendar
+        calendar.set(Calendar.MONTH, month);
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        return calendar.getTime();
+    }
+
+    public static String generateRandomCVV() {
+        return faker.number().digits(3);
+    }
+
+
 }

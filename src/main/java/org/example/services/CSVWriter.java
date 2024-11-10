@@ -1,18 +1,15 @@
 package org.example.services;
 
-import com.github.javafaker.Faker;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import org.example.models.Account;
-import org.example.models.AccountType;
-import org.example.models.Status;
+import org.example.models.*;
 
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class CSVWriter {
 
@@ -22,7 +19,7 @@ public class CSVWriter {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvPath, true))) {
             for (int i = 1; i < 1000; i++) {
                 name = DataGenerator.generateRandomFirstName();
-                surName = DataGenerator.generateRandomFirstName();
+                surName = DataGenerator.generateRandomLastName();
                 String[] data = {
                         DataGenerator.generateRandomSubjectCode(),
                         name,
@@ -61,7 +58,67 @@ public class CSVWriter {
         }
     }
 
-    public static String readSubjectCodeFromCsv(String filePath, int rowIndex) throws IOException {
+    public static void writeTransactionToCSV(String path, String accountPath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
+            for (int i = 1; i < 400; i++) {
+                String[] data = {
+                        String.valueOf(DataGenerator.generateRandomBalance()),
+                        new Date().toString(),
+                        TransactionType.TRANSFER.name(),
+                        readSubjectCodeFromCsv(accountPath, i)
+                };
+
+                String line = String.join(",", data);
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the CSV file: " + e.getMessage());
+        }
+    }
+
+    public static void writeLoanToCsv(String filePath, String customerPath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            for (int i = 1; i < 200; i++) {
+                Date startDate = DataGenerator.generateRandomNearNowDate();
+                String[] data = {
+                        startDate.toString(),
+                        DataGenerator.addRandomYears(startDate).toString(),
+                        String.valueOf(DataGenerator.generateRandomBalance()/(i+1)),
+                        String.valueOf(DataGenerator.generateRandomIntInRange()),
+                        LoanStatus.ACTIVE.name(),
+                        readSubjectCodeFromCsv(customerPath, i*2)
+                };
+
+                String line = String.join(",", data);
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the CSV file: " + e.getMessage());
+        }
+    }
+
+    public static void writeCardToCsv(String path, String customerPath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
+            for (int i = 1; i < 350; i++) {
+
+                String[] data = {
+                        DataGenerator.generateRandomCardNumber(),
+                        DataGenerator.generateRandomExpireDate().toString(),
+                        DataGenerator.generateRandomCVV(),
+                        readSubjectCodeFromCsv(customerPath, i*2)
+                };
+
+                String line = String.join(",", data);
+                writer.write(line);
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to the CSV file: " + e.getMessage());
+        }
+    }
+    private static String readSubjectCodeFromCsv(String filePath, int rowIndex) throws IOException {
         try (CSVReader csvReader = new CSVReader(new FileReader(filePath))) {
             List<String[]> rows = csvReader.readAll();
             if (rowIndex >= 0 && rowIndex < rows.size()) {
