@@ -1,8 +1,7 @@
 package org.example.constants;
 
 public class Constants {
-    public static final String BASE_URL = "http://localhost:8080";
-    public static final String LOCALHOST = "http://localhost:";
+    public static final String BASE_URL = "http://localhost:8083";
     public static final String POST_CUSTOMER = "/customer";
     public static final String GET_CUSTOMER_BY_CUSTOMER_CODE = "/findCustomerBySubjectCode/";
     public static final String PUT_CUSTOMER_EMAIL = "/editCustomerEmail/";
