@@ -2,6 +2,7 @@ package org.example;
 
 import com.github.javafaker.Faker;
 import org.example.models.*;
+import org.example.services.CSVWriter;
 import org.example.services.DataGenerator;
 import org.example.services.RequestSender;
 
@@ -22,10 +23,15 @@ public class Client {
             "8608759873", "4125463538", "6745777332", "4944567675"
     );
 
+
+    private static String PATH_TO_CSV_TIME = "src/main/resources/time";
+
     private static final Faker faker = new Faker();
 
     public static void getRequests(int repetitions) {
         for (int i = 0; i < repetitions; i++) {
+            long start = System.currentTimeMillis();
+
             String subjectCode = DataGenerator.generateRandomSubjectCode();
             customersCodes.add(subjectCode);
             insertNewCustomer(subjectCode, DataGenerator.generateRandomFirstName(),
@@ -66,6 +72,10 @@ public class Client {
             insertNewCard(DataGenerator.generateRandomCardNumber(), DataGenerator.generateRandomExpireDate(),
                     DataGenerator.generateRandomCVV(), customersCodes.get(faker.number().numberBetween(0, customersCodes.size())));
 
+            long end = System.currentTimeMillis();
+
+            long elapsedMillis = end - start;
+            CSVWriter.writeTimeToCSV(elapsedMillis, PATH_TO_CSV_TIME);
         }
     }
 

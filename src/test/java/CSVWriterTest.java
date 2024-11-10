@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import org.example.services.CSVWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +40,17 @@ public class CSVWriterTest {
         CSVWriter.writeLoanToCsv(LOAN_CSV_PATH, CUSTOMER_CSV_PATH);
         assertTrue(new File(LOAN_CSV_PATH).exists());
     }
+
     @Test
     void testWriteCardToCsv() {
         CSVWriter.writeCardToCsv(CARD_CSV_PATH, CUSTOMER_CSV_PATH);
         assertTrue(new File(CARD_CSV_PATH).exists());
+    }
+
+
+    @Test
+    void testWriteTime() {
+        Faker faker = new Faker();
+        CSVWriter.writeTimeToCSV(faker.number().randomNumber(), "src/main/resources/time");
     }
 }

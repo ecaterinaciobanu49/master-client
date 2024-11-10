@@ -129,4 +129,14 @@ public class CSVWriter {
         }
         return null;
     }
+
+    public static void writeTimeToCSV(long elapsedTime, String path) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
+            writer.write(Long.toString(elapsedTime));
+            writer.newLine();
+            System.out.println("Value appended successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
